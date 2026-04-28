@@ -6,25 +6,62 @@ Architecture:
 
 `User URL -> Scraper -> Feature Extractor -> Rule Engine -> ML Classifier -> Explanation Engine -> Results Dashboard`
 
-## What it does
+## Upgraded project structure
 
-- Scrapes a pasted job URL and extracts title, company, salary, contacts, recruiter signals, application links, and metadata.
-- Detects fraud indicators such as payment requests, recruiter impersonation, domain mismatch, urgency tactics, remote-job scam language, and exploitative internship patterns.
-- Combines expert rules with an interpretable ML-style weighted classifier.
-- Produces explainable JSON plus a dashboard-ready decision report.
+```text
+fake-job-detector/
+|
+|- scraper/
+|  |- scrape_jobs.py
+|
+|- detector/
+|  |- rules.py
+|  |- suspicious_keywords.py
+|  |- features.py
+|  |- explain.py
+|  |- pipeline.py
+|  `- models.py
+|
+|- ml_model/
+|  |- train_model.py
+|  |- classifier.py
+|  `- model.pkl
+|
+|- api/
+|  `- app.py
+|
+|- frontend/
+|  |- index.html
+|  |- app.js
+|  `- styles.css
+|
+`- tests/
+   `- test_pipeline.py
+```
 
-## Project structure
+## What each folder does
 
-- [app.py](d:/Working_project/Fake_Job_Detection/app.py): entry point for the local server.
-- [fake_job_detector/pipeline.py](d:/Working_project/Fake_Job_Detection/fake_job_detector/pipeline.py): end-to-end analysis flow.
-- [fake_job_detector/scraper.py](d:/Working_project/Fake_Job_Detection/fake_job_detector/scraper.py): URL scraping and extraction.
-- [fake_job_detector/features.py](d:/Working_project/Fake_Job_Detection/fake_job_detector/features.py): fraud signal extraction.
-- [fake_job_detector/rules.py](d:/Working_project/Fake_Job_Detection/fake_job_detector/rules.py): expert rule engine.
-- [fake_job_detector/classifier.py](d:/Working_project/Fake_Job_Detection/fake_job_detector/classifier.py): interpretable classifier and calibrated fake probability.
-- [fake_job_detector/explain.py](d:/Working_project/Fake_Job_Detection/fake_job_detector/explain.py): human-readable explainability output.
-- [static/index.html](d:/Working_project/Fake_Job_Detection/static/index.html): dashboard UI.
+- [scraper/scrape_jobs.py](/d:/Working_project/Fake_Job_Detection/scraper/scrape_jobs.py): fetches a pasted URL and extracts job content, recruiter signals, domain data, and metadata.
+- [detector/rules.py](/d:/Working_project/Fake_Job_Detection/detector/rules.py): applies expert fraud rules and creates risk flags.
+- [detector/suspicious_keywords.py](/d:/Working_project/Fake_Job_Detection/detector/suspicious_keywords.py): central keyword lists for payment scams, urgency, phishing-style recruiting, and exploitative internships.
+- [ml_model/train_model.py](/d:/Working_project/Fake_Job_Detection/ml_model/train_model.py): generates the serialized model artifact.
+- [ml_model/classifier.py](/d:/Working_project/Fake_Job_Detection/ml_model/classifier.py): loads `model.pkl` and produces fake probability, confidence, and class labels.
+- [api/app.py](/d:/Working_project/Fake_Job_Detection/api/app.py): serves the API and the dashboard.
+- [frontend/index.html](/d:/Working_project/Fake_Job_Detection/frontend/index.html): dashboard UI.
 
-## API
+## Running the project
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Generate the model artifact:
+
+```bash
+python ml_model/train_model.py
+```
 
 Start the app:
 
@@ -49,37 +86,11 @@ Content-Type: application/json
 }
 ```
 
-Example output shape:
-
-```json
-{
-  "overall_risk_score": 73.4,
-  "risk_meter": "High",
-  "fake_percentage": 78.2,
-  "confidence_score": 84.1,
-  "model_prediction": {
-    "label": "High Probability Scam",
-    "category": "advance_fee_scam"
-  },
-  "dashboard": {
-    "recommendation": "Avoid / Likely Scam",
-    "red_flags_checklist": [
-      "training fee",
-      "work from home",
-      "Recruiter used free email domains."
-    ]
-  }
-}
-```
-
 ## Fraud scoring logic
 
-- Rule engine:
-  High-risk rules add large penalties for payment requests, spoofed recruiter identities, phishing-style domains, and exploitative internship language.
-- ML classifier:
-  A transparent weighted feature model converts extracted signals into fake probability and confidence.
-- Fusion:
-  `overall_risk = 0.45 * rule_score + 0.55 * fake_probability`
+- Rule engine: high-risk rules add strong penalties for applicant payment requests, spoofed recruiter identities, phishing-style domains, and exploitative internship language.
+- ML classifier: a transparent weighted model stored in `ml_model/model.pkl` converts extracted signals into fake probability and confidence.
+- Fusion: `overall_risk = 0.45 * rule_score + 0.55 * fake_probability`
 - Recommendation:
   `Legitimate -> Safe to Apply`
   `Suspicious -> Verify Before Applying`
@@ -94,12 +105,10 @@ Example output shape:
 
 Recommended production model path:
 
-1. Start with calibrated Logistic Regression on tabular + text-derived features.
+1. Start with calibrated Logistic Regression on tabular and text-derived features.
 2. Add SHAP-backed Explainable Boosting or XGBoost if you need more recall.
 3. Keep rule-based overrides for high-severity scams such as upfront-fee requests.
 
-## Notes
+## Compatibility note
 
-- The current implementation prioritizes interpretability over black-box accuracy.
-- Domain age and WHOIS enrichment are left as extension points because they depend on external services or registries.
-- Tests cover the core scoring and explanation pipeline in [tests/test_pipeline.py](d:/Working_project/Fake_Job_Detection/tests/test_pipeline.py).
+- The old `fake_job_detector/` package is still present as a compatibility layer, but the new canonical structure is `scraper/`, `detector/`, `ml_model/`, `api/`, and `frontend/`.

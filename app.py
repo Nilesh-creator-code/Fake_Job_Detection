@@ -1,4 +1,4 @@
-from fake_job_detector.server import run
+from api.app import run
 
 
 if __name__ == "__main__":

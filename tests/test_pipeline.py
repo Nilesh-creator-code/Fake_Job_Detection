@@ -1,8 +1,8 @@
-from fake_job_detector.classifier import classify_posting
-from fake_job_detector.explain import build_explanation
-from fake_job_detector.features import extract_features
-from fake_job_detector.models import ContactDetails, DomainInfo, RecruiterDetails, ScrapedJobPosting
-from fake_job_detector.rules import apply_rules
+from detector.explain import build_explanation
+from detector.features import extract_features
+from detector.models import ContactDetails, DomainInfo, RecruiterDetails, ScrapedJobPosting
+from detector.rules import apply_rules
+from ml_model.classifier import classify_posting
 
 
 def build_posting(text: str, title: str = "Marketing Intern") -> ScrapedJobPosting:
