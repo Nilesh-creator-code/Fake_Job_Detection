@@ -54,13 +54,12 @@ class AppHandler(BaseHTTPRequestHandler):
         except Exception as exc:  # pragma: no cover
             return self._send_json({"error": "Analysis failed.", "details": str(exc)}, status=500)
 
-
-
-def run(host: str = "127.0.0.1", port: int | None = None) -> None:
-    port = port or int(os.environ.get("PORT", "8000"))
+def run() -> None:
+    port = int(os.environ.get("PORT", 8000))
+    host = "0.0.0.0"
 
     server = ThreadingHTTPServer((host, port), AppHandler)
-    print(f"Running on http://{host}:{port}")
+    print(f"Running on http://127.0.0.1:{port}")
     server.serve_forever()
 
 
