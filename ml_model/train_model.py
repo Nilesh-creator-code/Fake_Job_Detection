@@ -10,12 +10,15 @@ DEFAULT_MODEL = {
     "version": "1.0",
     "labels": ["Legitimate", "Suspicious", "Likely Fake", "High Probability Scam"],
     "signal_adjustments": {
-        "trust_signal_penalty": 6.0,
-        "https_penalty": 2.0,
-        "rule_score_multiplier": 0.8,
+        "trust_signal_penalty": 3.5,
+        "https_penalty": 1.5,
+        "rule_score_multiplier": 0.72,
+        "official_careers_bonus": 10.0,
+        "corporate_alignment_bonus": 8.0,
+        "policy_signal_bonus": 6.0,
     },
-    "sigmoid_center": 3.8,
-    "sigmoid_scale": 1.35,
+    "sigmoid_center": 4.2,
+    "sigmoid_scale": 1.5,
 }
 
 

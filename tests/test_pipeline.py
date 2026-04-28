@@ -69,3 +69,50 @@ def test_explanation_contains_recommendation():
         "Avoid / Likely Scam",
     }
     assert explanation.summary
+
+
+def test_official_careers_posting_is_not_scored_like_a_scam():
+    text = (
+        "Google is proud to be an equal opportunity employer. "
+        "Information collected and processed as part of your Google Careers profile "
+        "is subject to Google's Applicant and Candidate Privacy Policy. "
+        "Minimum qualifications include sales and client relationship experience. "
+        "Preferred qualifications include stakeholder management and digital marketing knowledge."
+    )
+    posting = ScrapedJobPosting(
+        source_url="https://www.google.com/about/careers/applications/jobs/results/123-account-executive",
+        fetched_at="2026-04-28T00:00:00+00:00",
+        title="Account Executive, Google Customer Solutions",
+        company_name="Google",
+        salary_text="",
+        contact_details=ContactDetails(emails=[], phones=[], addresses=[]),
+        application_links=["https://careers.google.com/apply/123"],
+        domain_info=DomainInfo(
+            url="https://www.google.com/about/careers/applications/jobs/results/123-account-executive",
+            hostname="www.google.com",
+            root_domain="google.com",
+            is_https=True,
+            tld="com",
+            subdomain_depth=1,
+            suspicious_tld=False,
+            looks_like_corporate_domain=True,
+            brand_mismatch=False,
+        ),
+        recruiter_details=RecruiterDetails(
+            names=[],
+            emails=[],
+            free_email_count=0,
+            spoofed_domain_emails=[],
+        ),
+        job_description=text,
+        requirements="Bachelor's degree and experience in consultative sales.",
+        metadata={"content_length": len(text)},
+        raw_text=text,
+    )
+    features, signals = extract_features(posting)
+    rules, rule_score = apply_rules(features)
+    prediction = classify_posting(features, signals, rule_score)
+
+    assert features["official_careers_host"] == 1
+    assert prediction.fake_probability < 45
+    assert prediction.label in {"Legitimate", "Suspicious"}

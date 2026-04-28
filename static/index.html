@@ -4,178 +4,276 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JobGuard AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <main class="workspace">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">JG</div>
-          <div>
-            <h1>JobGuard AI</h1>
-            <p>Fraud detection console</p>
+    <div class="app-frame">
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-top">
+          <button id="sidebar-toggle" class="icon-button sidebar-toggle" type="button" aria-label="Toggle sidebar">
+            <span></span>
+            <span></span>
+          </button>
+          <div class="brand">
+            <div class="brand-mark">JG</div>
+            <div class="brand-copy">
+              <h1>JobGuard AI</h1>
+              <p>Threat intelligence for hiring</p>
+            </div>
           </div>
         </div>
 
-        <nav class="nav-list">
-          <button class="nav-item is-active" type="button">Dashboard</button>
-          <button class="nav-item" type="button">Scan New Job</button>
-          <button class="nav-item" type="button">History</button>
-          <button class="nav-item" type="button">Reports</button>
-          <button class="nav-item" type="button">Alerts</button>
-          <button class="nav-item" type="button">Settings</button>
-          <button class="nav-item" type="button">Help</button>
+        <div class="nav-section-label">Workspace</div>
+        <nav class="sidebar-nav">
+          <button class="nav-item is-active" type="button" data-section="dashboard">
+            <span class="nav-icon">DB</span>
+            <span class="nav-label">Dashboard</span>
+          </button>
+          <button class="nav-item" type="button" data-section="scan">
+            <span class="nav-icon">SC</span>
+            <span class="nav-label">Scan Job</span>
+          </button>
+          <button class="nav-item" type="button" data-section="history">
+            <span class="nav-icon">HS</span>
+            <span class="nav-label">History</span>
+          </button>
+          <button class="nav-item" type="button" data-section="reports">
+            <span class="nav-icon">RP</span>
+            <span class="nav-label">Reports</span>
+          </button>
+          <button class="nav-item" type="button" data-section="alerts">
+            <span class="nav-icon">AL</span>
+            <span class="nav-label">Alerts</span>
+          </button>
+          <button class="nav-item" type="button" data-section="settings">
+            <span class="nav-icon">ST</span>
+            <span class="nav-label">Settings</span>
+          </button>
         </nav>
 
-        <div class="sidebar-note">
-          <p>Rule-based checks</p>
-          <p>ML scoring</p>
-          <p>Explainable AI</p>
-        </div>
       </aside>
 
-      <div class="main-pane">
-        <header class="page-head">
-          <div>
-            <p class="eyebrow">AI-Powered Fake Job & Internship Detection System</p>
-            <h2>Wireframe-inspired analysis workspace</h2>
-          </div>
-          <div class="head-actions">
-            <button id="download-report" class="ghost-button" type="button">Download Report</button>
-            <button id="scan-another" class="primary-button" type="button">Scan Another</button>
+      <main class="main-shell">
+        <header class="topbar">
+          <div class="topbar-actions">
+            <button class="icon-button glass" type="button" title="Notifications">
+              <span class="button-dot"></span>
+              NT
+            </button>
+            <button id="quick-demo" class="ghost-button glass" type="button">Load Demo</button>
+            <button id="download-report" class="primary-button" type="button">Download Report</button>
+            <div class="avatar-menu glass">
+              <div class="avatar large">AI</div>
+              <div class="avatar-copy">
+                <strong>JobGuard Ops</strong>
+                <span>Premium workspace</span>
+              </div>
+            </div>
           </div>
         </header>
 
-        <section class="board-grid">
-          <section class="panel panel-overview">
-            <div class="panel-head">
-              <span class="panel-badge">1</span>
+        <section class="scan-panel premium-card scan-panel-top">
+          <div class="panel-top">
+            <div>
+              <p class="panel-kicker">Smart Analysis Form</p>
+              <h3>Scan a job or internship posting</h3>
+            </div>
+            <span class="panel-chip">Realtime AI review</span>
+          </div>
+
+          <form id="analyze-form" class="scan-form">
+            <label for="url-input">Job posting URL</label>
+            <div class="input-shell glass">
+              <span class="input-icon">URL</span>
+              <input id="url-input" name="url" type="url" placeholder="https://company.com/careers/role" required />
+              <button id="analyze-button" class="primary-button scan-button" type="submit">
+                <span class="button-label">AI Scan</span>
+                <span class="button-loader"></span>
+              </button>
+            </div>
+            <p class="helper-text">Paste the public listing URL or load the demo experience.</p>
+          </form>
+
+          <div id="drop-zone" class="drop-zone glass" title="Upload a text file with job description content">
+            <div class="drop-icon">UP</div>
+            <div>
+              <strong>Drag and drop job description</strong>
+              <p>TXT files supported for quick text-only analysis context.</p>
+            </div>
+            <input id="file-upload" type="file" accept=".txt" />
+          </div>
+
+          <div class="feature-pills">
+            <span data-tip="Checks domain alignment and recruiter identity">Company Verification</span>
+            <span data-tip="Detects unrealistic compensation and bait tactics">Salary Analysis</span>
+            <span data-tip="Evaluates recruiter email and application links">Contact Validation</span>
+            <span data-tip="Finds wording anomalies and urgency pressure">Grammar Scam Detection</span>
+            <span data-tip="Uses metadata, content length, and hosting signals">Metadata Signals</span>
+          </div>
+
+          <div class="scan-status-row">
+            <div id="status" class="status-pill">Ready to inspect a posting.</div>
+            <div class="scan-mini-stats">
+              <span>Rules: 9</span>
+              <span>Signals: 13</span>
+              <span>Mode: Explainable AI</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="analytics-grid">
+          <article class="metric-card premium-card">
+            <div class="metric-head">
               <div>
-                <h3>Dashboard Overview</h3>
-                <p>Scan result overview</p>
+                <p class="metric-label">AI Fraud Risk Score</p>
+                <h3 id="risk-score">0</h3>
+              </div>
+              <span id="risk-meter" class="risk-chip neutral">Pending</span>
+            </div>
+            <div class="ring-wrap">
+              <canvas id="riskRingChart"></canvas>
+              <div class="ring-center">
+                <strong id="risk-center">0</strong>
+                <span id="risk-label">Awaiting scan</span>
               </div>
             </div>
+            <div class="metric-foot">
+              <span>Live heuristic + model fusion</span>
+              <span id="risk-trend">No trend yet</span>
+            </div>
+          </article>
 
-            <div class="overview-cards">
-              <article class="stat-card meter-card">
-                <span>Overall Scam Risk Score</span>
-                <div class="arc-meter">
-                  <div class="arc-track"></div>
-                  <div id="arc-fill" class="arc-fill"></div>
-                  <div class="arc-center">
-                    <strong id="risk-score">0 / 100</strong>
-                    <em id="risk-label">No scan yet</em>
-                  </div>
+          <article class="metric-card premium-card">
+            <div class="metric-head">
+              <div>
+                <p class="metric-label">Scam Probability</p>
+                <h3 id="fake-percentage">0%</h3>
+              </div>
+              <span id="confidence" class="meta-inline">Confidence: -</span>
+            </div>
+            <div class="progress-stack">
+              <div class="progress-bar">
+                <div id="fake-bar" class="progress-fill danger-fill"></div>
+              </div>
+              <div class="progress-meta">
+                <span>Legitimate</span>
+                <span>Critical</span>
+              </div>
+            </div>
+            <canvas id="probabilityTrendChart" class="mini-chart"></canvas>
+          </article>
+
+          <article class="metric-card premium-card">
+            <div class="metric-head">
+              <div>
+                <p class="metric-label">Recommendation</p>
+                <h3 id="recommendation">Awaiting scan</h3>
+              </div>
+              <span id="classification" class="meta-inline">No classification</span>
+            </div>
+            <div class="recommendation-panel">
+              <div class="recommendation-indicator"></div>
+              <div>
+                <strong id="fraud-category">Pattern: -</strong>
+                <p id="summary-text">Paste a URL to generate the explainability report.</p>
+              </div>
+            </div>
+            <div class="trust-meters">
+              <div>
+                <span>Trust Signals</span>
+                <strong id="trust-score">0</strong>
+              </div>
+              <div>
+                <span>Red Flags</span>
+                <strong id="flag-score">0</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="metric-card premium-card">
+            <div class="metric-head">
+              <div>
+                <p class="metric-label">Recent Threat Activity</p>
+                <h3 id="alerts-count">0</h3>
+              </div>
+              <span class="meta-inline">24h feed</span>
+            </div>
+            <div id="alert-feed" class="alert-feed">
+              <div class="alert-item">
+                <span class="alert-dot"></span>
+                <div>
+                  <strong>Waiting for first scan</strong>
+                  <p>Threat feed will populate after analysis.</p>
                 </div>
-              </article>
-
-              <article class="stat-card">
-                <span>How Fake?</span>
-                <strong id="fake-percentage">0%</strong>
-                <em id="confidence">Confidence: -</em>
-                <div class="mini-bar"><div id="fake-bar" class="mini-bar-fill"></div></div>
-              </article>
-
-              <article class="stat-card">
-                <span>Risk Level</span>
-                <strong id="risk-meter" class="pill pill-neutral">Pending</strong>
-                <em id="classification">No classification</em>
-              </article>
-
-              <article class="stat-card">
-                <span>Recommendation</span>
-                <strong id="recommendation" class="recommendation-text">Awaiting scan</strong>
-                <em id="fraud-category">Pattern: -</em>
-              </article>
+              </div>
             </div>
+          </article>
+        </section>
 
-            <div class="tri-grid">
-              <article class="subpanel">
-                <h4>Red Flags</h4>
-                <ul id="red-flags" class="signal-list danger"></ul>
-              </article>
+        <section class="content-grid">
+          <section class="results-stack">
+            <article class="results-card premium-card">
+              <div class="panel-top">
+                <div>
+                  <p class="panel-kicker">Risk Intelligence</p>
+                  <h3>Red flags and trust signals</h3>
+                </div>
+              </div>
+              <div class="dual-columns">
+                <div class="signal-panel danger-panel">
+                  <div class="signal-head">
+                    <strong>Red Flags</strong>
+                    <span id="red-flag-badge" class="count-badge danger">0</span>
+                  </div>
+                  <ul id="red-flags" class="signal-list"></ul>
+                </div>
+                <div class="signal-panel trust-panel">
+                  <div class="signal-head">
+                    <strong>Trust Signals</strong>
+                    <span id="trust-badge" class="count-badge success">0</span>
+                  </div>
+                  <ul id="trust-signals" class="signal-list"></ul>
+                </div>
+              </div>
+            </article>
 
-              <article class="subpanel">
-                <h4>Explanation Summary</h4>
-                <p id="summary-text" class="summary-copy">Paste a URL to generate the explainability report.</p>
-                <ul id="top-triggers" class="signal-list compact"></ul>
-              </article>
-
-              <article class="subpanel">
-                <h4>Trust Signals</h4>
-                <ul id="trust-signals" class="signal-list trust"></ul>
-              </article>
-            </div>
+            <article class="results-card premium-card">
+              <div class="panel-top">
+                <div>
+                  <p class="panel-kicker">Explainable AI</p>
+                  <h3>Why the model thinks this listing is risky</h3>
+                </div>
+              </div>
+              <div class="explain-grid">
+                <section class="glass inner-card">
+                  <h4>Feature Triggers</h4>
+                  <ul id="feature-triggers" class="signal-list compact"></ul>
+                </section>
+                <section class="glass inner-card">
+                  <h4>Rule Matches</h4>
+                  <ul id="rule-matches" class="signal-list compact"></ul>
+                </section>
+                <section class="glass inner-card">
+                  <h4>Model Reasoning</h4>
+                  <ul id="model-reasoning" class="signal-list compact"></ul>
+                </section>
+              </div>
+            </article>
           </section>
+        </section>
 
-          <section class="panel panel-input">
-            <div class="panel-head">
-              <span class="panel-badge">2</span>
+        <section class="detail-grid">
+          <article class="premium-card detail-card">
+            <div class="panel-top">
               <div>
-                <h3>Scan New Job</h3>
-                <p>Scan a job or internship posting</p>
+                <p class="panel-kicker">Extracted Details</p>
+                <h3>Structured job intelligence</h3>
               </div>
             </div>
-
-            <form id="analyze-form" class="scan-form">
-              <label for="url-input">Paste Job URL</label>
-              <div class="scan-row">
-                <input id="url-input" name="url" type="url" placeholder="https://example.com/job/123" required />
-                <button class="primary-button" type="submit">Analyze</button>
-              </div>
-              <p class="helper-text">Paste the full job or internship posting URL from any website.</p>
-            </form>
-
-            <div class="analysis-icons">
-              <div class="icon-chip">Company & Domain</div>
-              <div class="icon-chip">Job Description</div>
-              <div class="icon-chip">Salary & Benefits</div>
-              <div class="icon-chip">Contact Details</div>
-              <div class="icon-chip">Recruiter Info</div>
-              <div class="icon-chip">Application Links</div>
-              <div class="icon-chip">Requirements</div>
-              <div class="icon-chip">Metadata</div>
-              <div class="icon-chip">Language & Grammar</div>
-              <div class="icon-chip">Scam Patterns</div>
-            </div>
-
-            <div id="status" class="status-line">Ready to inspect a posting.</div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-head">
-              <span class="panel-badge">3</span>
-              <div>
-                <h3>Detailed Result</h3>
-                <p>Explainability report</p>
-              </div>
-            </div>
-
-            <div class="explain-grid">
-              <article class="subpanel">
-                <h4>Why this may be fake</h4>
-                <ul id="feature-triggers" class="signal-list danger compact"></ul>
-              </article>
-              <article class="subpanel">
-                <h4>Rule matches</h4>
-                <ul id="rule-matches" class="signal-list compact"></ul>
-              </article>
-              <article class="subpanel">
-                <h4>Model reasoning</h4>
-                <ul id="model-reasoning" class="signal-list compact"></ul>
-              </article>
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-head">
-              <span class="panel-badge">4</span>
-              <div>
-                <h3>Extracted Job Details</h3>
-                <p>Structured information</p>
-              </div>
-            </div>
-
             <dl class="details-grid">
               <div><dt>Job Title</dt><dd id="job-title">-</dd></div>
               <div><dt>Company</dt><dd id="company-name">-</dd></div>
@@ -190,92 +288,103 @@
               <div><dt>Language Quality</dt><dd id="language-quality">-</dd></div>
               <div><dt>Requirements</dt><dd id="requirements-flag">-</dd></div>
             </dl>
-          </section>
+          </article>
 
-          <section class="panel">
-            <div class="panel-head">
-              <span class="panel-badge">5</span>
+          <article class="premium-card chart-card">
+            <div class="panel-top">
               <div>
-                <h3>History & Reports</h3>
-                <p>Scan history</p>
+                <p class="panel-kicker">Pattern Matrix</p>
+                <h3>Fraud signal heatmap</h3>
               </div>
             </div>
+            <div id="pattern-heatmap" class="heatmap-grid"></div>
+          </article>
 
-            <div class="history-wrap">
-              <table class="history-table">
-                <thead>
-                  <tr>
-                    <th>Job Title / Company</th>
-                    <th>Risk Score</th>
-                    <th>Risk Level</th>
-                    <th>Result</th>
-                    <th>Time</th>
-                  </tr>
-                </thead>
-                <tbody id="history-body">
-                  <tr>
-                    <td colspan="5" class="empty-row">No scans yet.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-head">
-              <span class="panel-badge">6</span>
+          <article class="premium-card chart-card">
+            <div class="panel-top">
               <div>
-                <h3>Reports</h3>
-                <p>PDF-style preview</p>
+                <p class="panel-kicker">Fraud Score Visualization</p>
+                <h3>Signal distribution</h3>
               </div>
             </div>
-
-            <div class="report-preview">
-              <div class="report-top">
-                <div>
-                  <h4>Job Scam Analysis Report</h4>
-                  <p id="report-timestamp">Awaiting scan</p>
-                </div>
-                <span class="pdf-chip">PDF</span>
-              </div>
-
-              <div class="report-columns">
-                <div class="report-block">
-                  <h5>Summary</h5>
-                  <dl class="report-summary">
-                    <div><dt>Risk Score</dt><dd id="report-risk-score">-</dd></div>
-                    <div><dt>Fake Probability</dt><dd id="report-fake">-</dd></div>
-                    <div><dt>Risk Level</dt><dd id="report-level">-</dd></div>
-                    <div><dt>Recommendation</dt><dd id="report-recommendation">-</dd></div>
-                  </dl>
-                </div>
-                <div class="report-meter">
-                  <div class="report-arc">
-                    <div class="arc-track small"></div>
-                    <div id="report-arc-fill" class="arc-fill small"></div>
-                    <div class="arc-center small">
-                      <strong id="report-score-center">0</strong>
-                      <em id="report-label-center">Pending</em>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="report-foot">
-                <article class="subpanel report-sub">
-                  <h5>Top red flags</h5>
-                  <ul id="report-red-flags" class="signal-list danger compact"></ul>
-                </article>
-                <article class="subpanel report-sub">
-                  <h5>Fraud pattern</h5>
-                  <p id="report-pattern">-</p>
-                </article>
-              </div>
-            </div>
-          </section>
+            <canvas id="signalChart"></canvas>
+          </article>
         </section>
+
+        <section class="bottom-grid">
+          <article class="premium-card">
+            <div class="panel-top">
+              <div>
+                <p class="panel-kicker">Scan Timeline</p>
+                <h3>Recent scan history</h3>
+              </div>
+            </div>
+            <div id="timeline" class="timeline">
+              <div class="timeline-empty">No scans yet.</div>
+            </div>
+          </article>
+
+          <article class="premium-card">
+            <div class="panel-top">
+              <div>
+                <p class="panel-kicker">Report Preview</p>
+                <h3>Download-ready summary</h3>
+              </div>
+            </div>
+            <div class="report-preview glass">
+              <div class="report-summary-card">
+                <div>
+                  <span class="mini-label">Risk Score</span>
+                  <strong id="report-risk-score">-</strong>
+                </div>
+                <div>
+                  <span class="mini-label">Fake Probability</span>
+                  <strong id="report-fake">-</strong>
+                </div>
+                <div>
+                  <span class="mini-label">Risk Level</span>
+                  <strong id="report-level">-</strong>
+                </div>
+                <div>
+                  <span class="mini-label">Recommendation</span>
+                  <strong id="report-recommendation">-</strong>
+                </div>
+              </div>
+              <div class="report-footer">
+                <div>
+                  <span class="mini-label">Fraud Pattern</span>
+                  <strong id="report-pattern">-</strong>
+                </div>
+                <div>
+                  <span class="mini-label">Generated</span>
+                  <strong id="report-timestamp">Awaiting scan</strong>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <div id="report-modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop"></div>
+      <div class="modal-card glass">
+        <div class="modal-head">
+          <div>
+            <p class="panel-kicker">Export Report</p>
+            <h3>Download analysis package</h3>
+          </div>
+          <button id="close-modal" class="icon-button glass" type="button">X</button>
+        </div>
+        <p class="modal-copy">
+          Export the latest structured report including dashboard metrics, explanation signals, and feature evidence as JSON.
+        </p>
+        <div class="modal-actions">
+          <button id="confirm-download" class="primary-button" type="button">Download JSON Report</button>
+          <button id="cancel-download" class="ghost-button glass" type="button">Cancel</button>
+        </div>
       </div>
-    </main>
+    </div>
 
     <script src="/app.js"></script>
   </body>

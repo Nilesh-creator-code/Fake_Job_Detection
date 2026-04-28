@@ -105,6 +105,15 @@ def apply_rules(features: dict) -> tuple[list[RuleFlag], float]:
             f"Trust signal count: {features['trust_signal_count']}.",
             "trust_signal",
         )
+    if features["official_careers_host"] == 1 and features["corporate_trust_alignment"] == 1:
+        add(
+            "RULE-TRUST-010",
+            "low",
+            -12,
+            "The posting appears on an official corporate careers surface.",
+            "HTTPS careers host and company-domain alignment both look legitimate.",
+            "official_careers_surface",
+        )
 
     total = max(0.0, min(100.0, sum(flag.score for flag in flags) + (5 if not flags else 0)))
     return flags, round(total, 2)

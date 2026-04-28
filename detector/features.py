@@ -45,6 +45,7 @@ def _genericity_score(text: str) -> float:
 
 def extract_features(posting: ScrapedJobPosting) -> tuple[dict, list[Feature]]:
     text = posting.raw_text.lower()
+    source_url = posting.source_url.lower()
     salary_max = _salary_value(posting.salary_text)
     payment_count, payment_hits = _count_terms(text, UPFRONT_PAYMENT_TERMS)
     urgency_count, urgency_hits = _count_terms(text, URGENCY_TERMS)
@@ -65,6 +66,37 @@ def extract_features(posting: ScrapedJobPosting) -> tuple[dict, list[Feature]]:
 
     unrealistic_salary = int(salary_max >= 250000 or ("intern" in posting.title.lower() and salary_max >= 80000))
     internship_role = int("intern" in posting.title.lower() or "internship" in text)
+    official_careers_host = int(
+        posting.domain_info.is_https
+        and not posting.domain_info.suspicious_tld
+        and any(
+            token in source_url
+            for token in (
+                "/careers",
+                "/jobs",
+                "greenhouse.io",
+                "lever.co",
+                "workdayjobs",
+                "myworkdayjobs",
+            )
+        )
+    )
+    corporate_trust_alignment = int(
+        posting.domain_info.looks_like_corporate_domain
+        and posting.domain_info.is_https
+        and not posting.domain_info.suspicious_tld
+    )
+    policy_signal = int(
+        any(
+            term in text
+            for term in (
+                "equal opportunity employer",
+                "applicant and candidate privacy policy",
+                "privacy policy",
+                "how we hire",
+            )
+        )
+    )
     feature_dict = {
         "suspicious_tld": int(posting.domain_info.suspicious_tld),
         "brand_mismatch": int(posting.domain_info.brand_mismatch),
@@ -86,6 +118,9 @@ def extract_features(posting: ScrapedJobPosting) -> tuple[dict, list[Feature]]:
         "https": int(posting.domain_info.is_https),
         "subdomain_depth": posting.domain_info.subdomain_depth,
         "content_length": posting.metadata.get("content_length", 0),
+        "official_careers_host": official_careers_host,
+        "corporate_trust_alignment": corporate_trust_alignment,
+        "policy_signal": policy_signal,
     }
 
     signals = [
@@ -98,9 +133,12 @@ def extract_features(posting: ScrapedJobPosting) -> tuple[dict, list[Feature]]:
         Feature("brand_mismatch", feature_dict["brand_mismatch"], 14.0, f"Company '{posting.company_name}' vs domain '{posting.domain_info.root_domain}'."),
         Feature("unrealistic_salary", unrealistic_salary, 8.0, posting.salary_text or "No salary extracted."),
         Feature("missing_company_info", missing_company, 12.0, "Company identity missing or overly generic."),
-        Feature("grammar_spelling_flags", round(grammar_ratio * 100), 7.0, f"Estimated grammar anomaly ratio: {grammar_ratio:.2f}."),
-        Feature("generic_description", round(genericity * 100), 8.0, f"Genericity score: {genericity:.2f}."),
+        Feature("grammar_spelling_flags", round(grammar_ratio, 3), 10.0, f"Estimated grammar anomaly ratio: {grammar_ratio:.2f}."),
+        Feature("generic_description", round(genericity, 3), 12.0, f"Genericity score: {genericity:.2f}."),
         Feature("trust_signals", trust_count, -7.0, ", ".join(trust_hits) or "Few explicit trust signals found."),
-        Feature("external_application_links", round(external_apply_ratio * 100), 6.0, f"External application ratio: {external_apply_ratio:.2f}."),
+        Feature("external_application_links", round(external_apply_ratio, 3), 8.0, f"External application ratio: {external_apply_ratio:.2f}."),
+        Feature("official_careers_host", official_careers_host, -12.0, "Posting is on an HTTPS careers/jobs host."),
+        Feature("corporate_trust_alignment", corporate_trust_alignment, -10.0, "Domain and company identity align cleanly."),
+        Feature("policy_signal", policy_signal, -8.0, "Applicant privacy or hiring policy language is present."),
     ]
     return feature_dict, signals

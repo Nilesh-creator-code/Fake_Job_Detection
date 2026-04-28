@@ -10,12 +10,15 @@ MODEL_PATH = Path(__file__).with_name("model.pkl")
 DEFAULT_MODEL = {
     "labels": ["Legitimate", "Suspicious", "Likely Fake", "High Probability Scam"],
     "signal_adjustments": {
-        "trust_signal_penalty": 6.0,
-        "https_penalty": 2.0,
-        "rule_score_multiplier": 0.8,
+        "trust_signal_penalty": 3.5,
+        "https_penalty": 1.5,
+        "rule_score_multiplier": 0.72,
+        "official_careers_bonus": 10.0,
+        "corporate_alignment_bonus": 8.0,
+        "policy_signal_bonus": 6.0,
     },
-    "sigmoid_center": 3.8,
-    "sigmoid_scale": 1.35,
+    "sigmoid_center": 4.2,
+    "sigmoid_scale": 1.5,
 }
 
 
@@ -54,6 +57,9 @@ def classify_posting(features: dict, signals: list[Feature], rule_score: float) 
     weighted_sum += rule_score * adjustments["rule_score_multiplier"]
     weighted_sum -= features["trust_signal_count"] * adjustments["trust_signal_penalty"]
     weighted_sum -= features["https"] * adjustments["https_penalty"]
+    weighted_sum -= features.get("official_careers_host", 0) * adjustments["official_careers_bonus"]
+    weighted_sum -= features.get("corporate_trust_alignment", 0) * adjustments["corporate_alignment_bonus"]
+    weighted_sum -= features.get("policy_signal", 0) * adjustments["policy_signal_bonus"]
     normalized = max(-20.0, min(120.0, weighted_sum / 10))
     fake_probability = _sigmoid((normalized - model["sigmoid_center"]) / model["sigmoid_scale"]) * 100
     confidence = min(99.0, 52 + abs(fake_probability - 50) * 0.8 + min(20, abs(rule_score - 25) * 0.3))
