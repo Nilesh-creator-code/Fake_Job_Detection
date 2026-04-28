@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
@@ -9,7 +10,6 @@ from detector.pipeline import analyze_job_url
 
 ROOT = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = ROOT / "frontend"
-
 
 class AppHandler(BaseHTTPRequestHandler):
     def _send_json(self, data: dict, status: int = 200) -> None:
@@ -55,7 +55,14 @@ class AppHandler(BaseHTTPRequestHandler):
             return self._send_json({"error": "Analysis failed.", "details": str(exc)}, status=500)
 
 
-def run(host: str = "127.0.0.1", port: int = 8000) -> None:
+
+def run(host: str = "127.0.0.1", port: int | None = None) -> None:
+    port = port or int(os.environ.get("PORT", "8000"))
+
     server = ThreadingHTTPServer((host, port), AppHandler)
-    print(f"Fake Job Detection dashboard running at http://{host}:{port}")
+    print(f"Running on http://{host}:{port}")
     server.serve_forever()
+
+
+if __name__ == "__main__":
+    run()
