@@ -11,6 +11,7 @@ from detector.pipeline import analyze_job_url
 ROOT = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = ROOT / "frontend"
 
+
 class AppHandler(BaseHTTPRequestHandler):
     def _send_json(self, data: dict, status: int = 200) -> None:
         payload = json.dumps(data, indent=2).encode("utf-8")
@@ -53,6 +54,10 @@ class AppHandler(BaseHTTPRequestHandler):
             return self._send_json(result.to_dict())
         except Exception as exc:  # pragma: no cover
             return self._send_json({"error": "Analysis failed.", "details": str(exc)}, status=500)
+
+    def do_HEAD(self):
+        self.send_response(200)
+        self.end_headers()
 
 def run() -> None:
     port = int(os.environ.get("PORT", 8000))
