@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fake Job & Internship Detection</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">AI-Powered Risk Analysis</p>
+          <h1>Fake Job and Internship Detection</h1>
+          <p class="lede">
+            Paste a job or internship URL to score scam risk, inspect red flags, and review an explainable decision.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <div class="hero-metric">
+            <span>Pipeline</span>
+            <strong>Scraper -> Features -> Rules -> ML -> Explain</strong>
+          </div>
+          <div class="hero-metric">
+            <span>Output</span>
+            <strong>JSON + Dashboard-ready report</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="input-band">
+        <form id="analyze-form" class="url-form">
+          <label for="url-input">Job or internship URL</label>
+          <div class="input-row">
+            <input id="url-input" name="url" type="url" placeholder="https://example.com/job/software-engineer-intern" required />
+            <button type="submit">Analyze</button>
+          </div>
+        </form>
+        <div id="status" class="status">Ready to inspect a posting.</div>
+      </section>
+
+      <section id="results" class="results hidden">
+        <div class="summary-grid">
+          <article class="metric-panel">
+            <span>Overall Scam Risk</span>
+            <strong id="risk-score">0</strong>
+          </article>
+          <article class="metric-panel">
+            <span>How Fake</span>
+            <strong id="fake-percentage">0%</strong>
+          </article>
+          <article class="metric-panel">
+            <span>Classification</span>
+            <strong id="classification">-</strong>
+          </article>
+          <article class="metric-panel">
+            <span>Recommendation</span>
+            <strong id="recommendation">-</strong>
+          </article>
+        </div>
+
+        <section class="risk-band">
+          <div>
+            <p class="section-label">Risk Meter</p>
+            <h2 id="risk-meter">Low</h2>
+            <p id="summary-text"></p>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-track">
+              <div id="meter-fill" class="meter-fill"></div>
+            </div>
+            <div class="meter-scale">
+              <span>Low</span>
+              <span>Medium</span>
+              <span>High</span>
+              <span>Critical</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-grid">
+          <article class="panel">
+            <p class="section-label">Posting</p>
+            <h3 id="job-title">-</h3>
+            <p id="company-name">-</p>
+            <dl class="facts">
+              <div><dt>Fraud Category</dt><dd id="fraud-category">-</dd></div>
+              <div><dt>Confidence</dt><dd id="confidence">-</dd></div>
+              <div><dt>Domain</dt><dd id="domain">-</dd></div>
+              <div><dt>Salary</dt><dd id="salary">-</dd></div>
+            </dl>
+          </article>
+
+          <article class="panel">
+            <p class="section-label">Red Flags</p>
+            <ul id="red-flags" class="checklist"></ul>
+          </article>
+
+          <article class="panel">
+            <p class="section-label">Trust Signals</p>
+            <ul id="trust-signals" class="checklist trust"></ul>
+          </article>
+
+          <article class="panel full-width">
+            <p class="section-label">Explainability Report</p>
+            <div class="report-grid">
+              <div>
+                <h4>Rule Matches</h4>
+                <ul id="rule-matches" class="compact-list"></ul>
+              </div>
+              <div>
+                <h4>Feature Triggers</h4>
+                <ul id="feature-triggers" class="compact-list"></ul>
+              </div>
+              <div>
+                <h4>Model Reasoning</h4>
+                <ul id="model-reasoning" class="compact-list"></ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel full-width">
+            <p class="section-label">Structured JSON</p>
+            <pre id="json-output"></pre>
+          </article>
+        </section>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+  </html>

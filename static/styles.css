@@ -1,0 +1,297 @@
+:root {
+  --bg: #f7f2ea;
+  --surface: rgba(255, 250, 242, 0.92);
+  --surface-strong: #fffaf1;
+  --ink: #1f1b18;
+  --muted: #655d57;
+  --line: rgba(63, 51, 43, 0.14);
+  --accent: #c95a22;
+  --accent-deep: #7c2d12;
+  --good: #2f6b46;
+  --warn: #d97706;
+  --bad: #b42318;
+  --critical: #7f1d1d;
+  --shadow: 0 20px 60px rgba(80, 46, 23, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(201, 90, 34, 0.12), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(47, 107, 70, 0.12), transparent 28%),
+    linear-gradient(180deg, #f6f0e7 0%, #f2e7d7 100%);
+  min-height: 100vh;
+}
+
+.app-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.hero,
+.input-band,
+.risk-band,
+.panel,
+.metric-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  border-radius: 8px;
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  gap: 24px;
+}
+
+.eyebrow,
+.section-label {
+  text-transform: uppercase;
+  letter-spacing: 0;
+  font-size: 0.75rem;
+  color: var(--accent-deep);
+  margin: 0 0 8px;
+}
+
+h1,
+h2,
+h3,
+h4,
+strong {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 0.95;
+  max-width: 11ch;
+}
+
+.lede {
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.hero-panel {
+  display: grid;
+  gap: 16px;
+  align-content: end;
+}
+
+.hero-metric {
+  padding: 18px;
+  border-radius: 8px;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+}
+
+.hero-metric span,
+.metric-panel span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.input-band {
+  margin-top: 18px;
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+.url-form label {
+  display: block;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  margin-bottom: 12px;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 12px;
+}
+
+input,
+button,
+pre {
+  border-radius: 8px;
+}
+
+input {
+  width: 100%;
+  padding: 14px 16px;
+  font: inherit;
+  border: 1px solid var(--line);
+  background: #fffefb;
+}
+
+button {
+  border: 0;
+  background: linear-gradient(135deg, var(--accent) 0%, #e7904d 100%);
+  color: white;
+  font: 700 1rem "Trebuchet MS", "Segoe UI", sans-serif;
+  cursor: pointer;
+}
+
+.status {
+  margin-top: 12px;
+  color: var(--muted);
+}
+
+.results {
+  margin-top: 18px;
+}
+
+.hidden {
+  display: none;
+}
+
+.summary-grid,
+.detail-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.summary-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.metric-panel {
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.metric-panel strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.8rem;
+}
+
+.risk-band {
+  margin-top: 16px;
+  border-radius: 8px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 24px;
+}
+
+.meter-wrap {
+  align-self: center;
+}
+
+.meter-track {
+  height: 20px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #2f6b46 0%, #d97706 50%, #b42318 75%, #7f1d1d 100%);
+}
+
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.7);
+  margin-left: auto;
+}
+
+.meter-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.detail-grid {
+  margin-top: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel {
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.facts {
+  margin: 16px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.facts dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.facts dd {
+  margin: 4px 0 0;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.checklist,
+.compact-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.checklist li::marker {
+  color: var(--bad);
+}
+
+.trust li::marker {
+  color: var(--good);
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+pre {
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  background: #241c16;
+  color: #f8efe4;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 280px;
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .risk-band,
+  .summary-grid,
+  .detail-grid,
+  .report-grid,
+  .facts,
+  .input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell {
+    width: min(100% - 20px, 1180px);
+    padding-top: 18px;
+  }
+
+  h1 {
+    max-width: 100%;
+  }
+}
